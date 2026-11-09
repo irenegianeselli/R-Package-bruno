@@ -282,7 +282,13 @@ help("summary.bruno_fit", package = "bruno")
 
 The package reference manual is available on [CRAN](https://cran.r-project.org/package=bruno).
 
-## Reference
+
+## Citation
+
+Gianeselli, I. (2026). How likely are your future participants to meet the same measurement criterion? The R package bruno. *Applied Psychological Measurement*. 
+https://doi.org/10.1177/01466216261490071
+
+## Theoretical reference
 
 de Finetti, B. (1937). La prévision: Ses lois logiques, ses sources subjectives. *Annales de l'Institut Henri Poincaré, 7*(1), 1–68.
 
