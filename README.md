@@ -1,4 +1,3 @@
-
 # bruno
 
 **Predicting User-Defined Event Recurrence under Exchangeability**
@@ -13,7 +12,7 @@ The package computes the predictive probability of a specified event occurring i
 
 ## Installation
 
-Install the released package from CRAN:
+Install the released version from CRAN:
 
 ```r
 install.packages("bruno")
@@ -22,7 +21,7 @@ library(bruno)
 
 ## Statistical framework
 
-Let $E_1,E_2,\ldots$ denote binary indicators of a user-defined event.
+Let E1, E2, ... denote binary indicators of a user-defined event.
 
 The predictive interpretation requires a substantive judgement that the observed and future event indicators are exchangeable within the intended predictive class.
 
@@ -30,50 +29,45 @@ For an indefinitely extendible exchangeable binary sequence, de Finetti's repres
 
 `bruno` adopts a beta distribution as an additional parametric specification of this mixing distribution. The beta specification is not implied by exchangeability alone.
 
-The user supplies an initial probability $\mu_0$, with $0<\mu_0<1$, and a positive concentration parameter $\tau$. The corresponding beta parameters are
+The user supplies an initial probability `mu0`, strictly between 0 and 1, and a positive concentration parameter `tau`. The corresponding beta parameters are:
 
-$$
-a=\mu_0\tau
-$$
+```text
+a = mu0 * tau
+b = (1 - mu0) * tau
+```
 
-and
+Suppose the declared event occurs `s` times among `n` analysable cases. Let `A(n,s)` denote the observed information that exactly `s` of these events occurred.
 
-$$
-b=(1-\mu_0)\tau.
-$$
+The conditional beta assessment is:
 
-Suppose the declared event occurs $s$ times among $n$ analysable cases. Let $A_{n,s}$ denote the observed information that exactly $s$ of these events occurred. Conditioning gives
+```text
+theta | A(n,s) ~ Beta(a + s, b + n - s)
+```
 
-$$
-\theta \mid A_{n,s} \sim \mathrm{Beta}(a+s,b+n-s).
-$$
+The predictive probability assigned to the same event occurring in the next exchangeable case is:
 
-The predictive probability assigned to the same event occurring in the next exchangeable case is
+```text
+P(E_next = 1 | A(n,s)) = (a + s) / (a + b + n)
 
-$$
-P(E_{n+1}=1\mid A_{n,s})
-=
-\frac{a+s}{a+b+n}
-=
-\frac{\mu_0\tau+s}{\tau+n}.
-$$
+                         = (mu0 * tau + s) / (tau + n)
+```
 
-For a prespecified future sample of $m$ cases, let $T$ denote the number of occurrences of the declared event. Its beta-binomial predictive distribution is
+For a prespecified future sample containing `m` cases, let `T` denote the number of occurrences of the declared event.
 
-$$
-P(T=t\mid A_{n,s})
-=
-\binom{m}{t}
-\frac{B(a+s+t,b+n-s+m-t)}
-{B(a+s,b+n-s)},
-\qquad t=0,\ldots,m.
-$$
+The exact beta-binomial predictive distribution is:
 
-Here, $B(\cdot,\cdot)$ denotes the beta function.
+```text
+P(T = t | A(n,s)) = choose(m,t) *
+                    B(a+s+t, b+n-s+m-t) / B(a+s, b+n-s)
+
+t = 0, 1, ..., m
+```
+
+Here, `B(x,y)` denotes the beta function and `choose(m,t)` the binomial coefficient.
 
 All conditional and predictive quantities are calculated analytically, without Monte Carlo simulation.
 
-The concentration parameter $\tau$ controls the concentration of the initial beta assessment. It does not automatically represent a literal number of previous observations.
+The concentration parameter `tau` controls the concentration of the initial beta assessment. It does not automatically represent a literal number of previous observations.
 
 ## Main functions
 
@@ -82,7 +76,7 @@ The concentration parameter $\tau$ controls the concentration of the initial bet
 | `bruno()` | Classifies the declared event and calculates conditional and predictive quantities. |
 | `predict()` | Returns the exact beta-binomial predictive distribution for a specified future sample size. |
 | `summary()` | Reports observed recurrence information and conditional and predictive probability intervals. |
-| `print()` | Displays the principal quantities of a fitted object. |
+| `print()` | Displays the principal quantities stored in a fitted object. |
 
 The package includes `bruno_example`, a constructed dataset illustrating event classification, missing-data handling and prediction across user-defined classes.
 
@@ -115,17 +109,17 @@ summary(fit)
 
 The event definition is supplied by the analyst. The package does not assign a substantive interpretation such as improvement or deterioration to the direction of change.
 
-In this example, the declared event occurs in four of the six cases. With $\mu_0=0.50$ and $\tau=10$, the initial beta parameters are $a=b=5$.
+In this example, the declared event occurs in four of the six cases. With `mu0 = 0.50` and `tau = 10`, the initial beta parameters are `a = 5` and `b = 5`.
 
-The next-case predictive probability is
+The next-case predictive probability is:
 
-$$
-P(E_7=1\mid A_{6,4})
-=
-\frac{5+4}{10+6}
-=
-0.5625.
-$$
+```text
+P(E_next = 1 | 4 events in 6 cases) = (5 + 4) / (10 + 6)
+
+                                   = 9 / 16
+
+                                   = 0.5625
+```
 
 This probability concerns recurrence of the specified event under the stated predictive assumptions.
 
@@ -219,10 +213,10 @@ In grouped analyses, cases with missing predictive-class membership are excluded
 The fitted object retains case-level event classifications and inclusion information:
 
 ```r
-fit_grouped$events
-fit_grouped$n_total
-fit_grouped$n_analyzed
-fit_grouped$n_excluded
+fit_grouped[["events"]]
+fit_grouped[["n_total"]]
+fit_grouped[["n_analyzed"]]
+fit_grouped[["n_excluded"]]
 ```
 
 The observed recurrence frequency is calculated using analysable cases only.
@@ -238,7 +232,7 @@ summary(fit_future, level = 0.95)
 summary(fit_future, level = 0.90)
 ```
 
-The conditional beta interval describes the dispersion of the conditional assessment of $\theta$.
+The conditional beta interval describes the dispersion of the conditional assessment of the mixing probability.
 
 The predictive interval concerns the number of occurrences of the declared event in a future sample.
 
@@ -301,3 +295,5 @@ Irene Gianeselli.
 ## Licence
 
 GPL-3.
+
+
